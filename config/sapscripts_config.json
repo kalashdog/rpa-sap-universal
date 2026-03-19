@@ -1,0 +1,477 @@
+{
+  "plants": {
+    "01-Anchieta": { "code": "ANC", "name": "Anchieta","base_path": "..\\001 - Anchieta\\000 - Dashboard Dados"},
+    "02-Taubate": { "code": "TBT", "name": "Taubate", "base_path": "..\\002 - Taubate\\000 - Dashboard Dados" },
+    "03-Curitiba": { "code": "CTB", "name": "Curitiba", "base_path": "..\\003 - Curitiba\\000 - Dashboard Dados" },
+    "04-SaoCarlos": { "code": "SCA", "name": "SaoCarlos", "base_path": "..\\004 - Sao Carlos\\000 - Dashboard Dados" }
+  },
+  "jobs": {
+    "ATEND_LINHA": {
+      "dashboard": "009 - Atendimento de Linha",
+      "transaction": "LT23",
+      "spool_name": "ATEND-LINHA",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "variant": "/AT.LI.-LT23",
+          "printer": "locl",
+          "local_extract": "009 - Atendimento de Linha",
+          "name_file": "raw_lt23.txt"
+        }
+      }
+    },
+    "LT23_FIFO1": {
+      "dashboard": "002 - Quebra de Fifo",
+      "transaction": "LT23",
+      "spool_name": "FIFO1",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "variant": "/kpiauto22",
+          "local_extract": "002 - Quebra de Fifo\\LT23",
+          "name_file": "LT23-{date:%d-%m-%Y}.txt"
+        },
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "variant": "/kpiauto2",
+          "local_extract": "002 - Quebra de Fifo\\LT23",
+          "name_file": "LT23-{date:%d-%m-%Y}.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "variant": "/LT23SCA",
+          "local_extract": "002 - Quebra de Fifo\\LT23",
+          "name_file": "LT23-{date:%d-%m-%Y}.txt"
+        }
+      }
+    },
+    "LX03_FIFO2": {
+      "dashboard": "002 - Quebra de Fifo",
+      "transaction": "LX03",
+      "spool_name": "FIFO2",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "*",
+          "variant": "/SESESLFIX",
+          "local_extract": "002 - Quebra de Fifo\\LX03",
+          "name_file": "LX03-{date:%d-%m-%Y}.txt"
+        },
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "lgtyp": "*",
+          "variant": "/viniauto",
+          "local_extract": "002 - Quebra de Fifo\\LX03",
+          "name_file": "LX03-{date:%d-%m-%Y}.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "lgtyp": "*",
+          "variant": "/viniautosca",
+          "local_extract": "002 - Quebra de Fifo\\LX03",
+          "name_file": "LX03-{date:%d-%m-%Y}.txt"
+        }
+      }
+    },
+    "LX03_BLOQUEADOS": {
+      "dashboard": "020 - Materiais Bloqueados",
+      "transaction": "LX03",
+      "spool_name": "BLOQUEADOS",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "*",
+          "variant": "/vinidash020",
+          "local_extract": "020 - Materiais Bloqueados",
+          "name_file": "bloqueados_live.txt"
+        }
+      }
+    },
+    "LX02_IMP": {
+      "dashboard": "004 - Importado",
+      "transaction": "LX02",
+      "spool_name": "IMP",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "variant": "//importado.",
+          "local_extract": "004 - Importado",
+          "name_file": "LX02.txt"
+        }
+      }
+    },
+    "LT22_IMP2": {
+      "dashboard": "004 - Importado",
+      "transaction": "LT22",
+      "spool_name": "IMP2",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "05S",
+          "variant": "/OTST",
+          "radio": "OFFTA",
+          "local_extract": "004 - Importado\\imp-historico",
+          "name_file": "LT22-PENDENTES.txt"
+        }
+      }
+    },
+    "LT22_IMP3": {
+      "dashboard": "004 - Importado Histórico",
+      "transaction": "LT22",
+      "spool_name": "IMP3",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "05S",
+          "variant": "/OTST",
+          "radio": "ALLTA",
+          "local_extract": "004 - Importado\\imp-historico",
+          "name_file": "LT22-{date:%b-%Y}.txt"
+        }
+      }
+    },
+    "MB51_EMPURRADA": {
+      "dashboard": "003 - Baixa Empurrada",
+      "transaction": "MB51",
+      "spool_name": "EMPURRADA",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "werks": "5100",
+          "lgort": "lb01",
+          "bwart": "311",
+          "variant": "/viniemp",
+          "printer": "locl",
+          "local_extract": "003 - Baixa Empurrada\\b.e-historico",
+          "name_file": "mes{date:%m-%d-%Y}.txt"
+        },
+        "02-Taubate": {
+          "werks": "5300",
+          "lgort": "lb01",
+          "bwart": "311",
+          "variant": "/viniemptbt",
+          "printer": "locl",
+          "local_extract": "003 - Baixa Empurrada\\MB51HIST",
+          "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        },
+        "04-SaoCarlos": {
+          "werks": "5200",
+          "lgort": "LP13",
+          "bwart": "311",
+          "variant": "/viniempsca",
+          "printer": "locl",
+          "local_extract": "003 - Baixa Empurrada\\MB51HIST",
+          "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        }
+      }
+    },
+    "VL06I_FORNEC": {
+      "dashboard": "001 - Fornecimentos Pendentes",
+      "transaction": "VL06I",
+      "spool_name": "FORNEC",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "vstel": "p100",
+          "date_low": "01.01.2024",
+          "local_extract": "001 - Fornecimentos Pendentes",
+          "name_file": "vl06ivw.txt"
+        },
+        "02-Taubate": {
+          "vstel": "p300",
+          "date_low": "01.01.2024",
+          "local_extract": "001 - Fornecimentos pendentes",
+          "name_file": "vl06i.txt"
+        },
+        "04-SaoCarlos": {
+          "vstel": ["p200", "a200"],
+          "date_low": "01.01.2024",
+          "local_extract": "001 - Fornecimentos pendentes",
+          "name_file": "vl06i.txt"
+        }
+      }
+    },
+    "LT22_ZONA": {
+      "dashboard": "006 - Controle de Zona",
+      "transaction": "LT22",
+      "spool_name": "ZONALT22",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "ZZ1",
+          "radio": "OFFTA",
+          "local_extract": "006 - Controle de Zona",
+          "name_file": "lt22zz1_pendentes.txt"
+        },
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "lgtyp": "Z*",
+          "radio": "OFFTA",
+          "variant": "/ZONALT22PDT",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "lt22zz1_pendentes.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "lgtyp": "*",
+          "radio": "OFFTA",
+          "variant": "/LT22PDTSCA",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "lt22zz1_pendentes.txt"
+        }
+      }
+    },
+    "LT22_ZONA_GERAL": {
+      "dashboard": "006 - Controle de Zona",
+      "transaction": "LT22",
+      "spool_name": "ZONALT22",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "lgtyp": "Z*",
+          "radio": "ALLTA",
+          "variant": "/ZONALT22",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "LT22ZZ1.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "lgtyp": "*",
+          "radio": "ALLTA",
+          "variant": "/LT22GERAL",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "LT22ZZ1.txt"
+        }
+      }
+    },
+    "LX03_ZONA": {
+      "dashboard": "006 - Controle de Zona",
+      "transaction": "LX03",
+      "spool_name": "LX03ZONA",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "lgtyp": "ZZ1",
+          "variant": "/ZONECONTROL",
+          "local_extract": "006 - Controle de Zona",
+          "name_file": "LX03ZZ1.txt"
+        },
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "lgtyp": "z*",
+          "variant": "/ZONECTRLTBT",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "LX03ZZ1.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "lgtyp": "*",
+          "variant": "/ctrlzonactb",
+          "local_extract": "006 - Controle de ZZ1",
+          "name_file": "LX03ZZ1.txt"
+        }
+      }
+    },
+    "LX02_BESI3": {
+      "dashboard": "005 - Baixa Divergente",
+      "transaction": "LX02",
+      "spool_name": "BESI3LX02",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "variant": "/TSTbesi",
+          "local_extract": "005 - Baixa Divergente",
+          "name_file": "LX02.txt"
+        },
+        "02-Taubate": {
+          "lgnum": "TBT",
+          "variant": "/LX02BD",
+          "local_extract": "005 - Baixa Divergente",
+          "name_file": "LX02.txt"
+        },
+        "04-SaoCarlos": {
+          "lgnum": "SCA",
+          "werks": "5200",
+          "variant": "/LX02BESI",
+          "local_extract": "005 - Baixa Divergente",
+          "name_file": "LX02.txt"
+        }
+      }
+    },
+    "MB51_BESI3": {
+      "dashboard": "005 - Baixa Divergente",
+      "transaction": "MB51",
+      "spool_name": "BESI3MB51",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "werks": "5100",
+          "lgort": "lb01",
+          "variant": "/TSTbesi3",
+          "local_extract": "005 - Baixa Divergente\\b.d-historico",
+          "name_file": "MB51-{date:%d%m%Y}.txt"
+        },
+        "02-Taubate": {
+          "werks": "5300",
+          "lgort": "lb01",
+          "variant": "/TST",
+          "local_extract": "005 - Baixa Divergente\\be_hist",
+          "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        },
+        "04-SaoCarlos": {
+          "werks": "5200",
+          "lgort": "lp13",
+          "bwart_list": ["261", "311"],
+          "variant": "/MB51BESIAUT",
+          "local_extract": "005 - Baixa Divergente\\be_hist",
+          "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        }
+      }
+    },
+    "LT23_COFRE1": {
+      "dashboard": "016 - Cofre Importado",
+      "transaction": "LT23",
+      "spool_name": "COFRE1",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "lgnum": "ANC",
+          "variant": "/newcofredash",
+          "local_extract": "016 - Cofre Importado\\SAP",
+          "name_file": "LT23COFRE-{date:%d-%m-%Y}.txt"
+        }
+      }
+    },
+    "MAISEWM021R_EMBALAGEM": {
+      "dashboard": "010 - Controle de Embalagens",
+      "transaction": "/VWK/MAISEWM021R",
+      "spool_name": "EMBALAGEMKPI",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "werks": "*",
+          "local_extract": "010 - Controle de Embalagens\\HISTORICO",
+          "name_file": "EMBALAGEM-{date:%m-%Y}.txt"
+        }
+      }
+    },
+    "MB52_AUTO": {
+      "dashboard": "000 - Compartilhado",
+      "transaction": "MB52",
+      "spool_name": "MB52AUTO",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "01-Anchieta": {
+          "variant": "/VINIAUTO52",
+          "local_extract": "000 - Compartilhado",
+          "name_file": "MB52.txt"
+        }
+      }
+    },
+    "AL11_BESI3": {
+      "dashboard": "005 - Baixa Divergente",
+      "transaction": "AL11",
+      "spool_name": "BESI3",
+      "active": true,
+      "background_job": false,
+      "once_per_day": true,
+      "plant_params": {
+        "01-Anchieta": {
+          "local_extract": "005 - Baixa Divergente",
+          "name_file": "besi3.txt"
+        }
+      }
+    },
+    "PKMC_GERAL": {
+      "dashboard": "000 - Compartilhado",
+      "transaction": "PKMC",
+      "spool_name": "PKMC",
+      "active": true,
+      "background_job": false,
+      "once_per_day": true,
+      "plant_params": {
+        "01-Anchieta": {
+          "werks": "5100",
+          "variant": "/VINIAUTO",
+          "local_extract": "000 - Compartilhado",
+          "name_file": "PKMC.XLSX"
+        },
+        "02-Taubate": {
+          "werks": "5300",
+          "variant": "/VINIAUTO",
+          "local_extract": "000 - Compartilhado",
+          "name_file": "PKMC.XLSX"
+        },
+        "04-SaoCarlos": {
+          "werks": "5200",
+          "variant": "/VINIAUTO",
+          "local_extract": "000 - Compartilhado",
+          "name_file": "PKMC.XLSX"
+        }
+      }
+    },
+    "MD04_GLOBAL": {
+      "dashboard": "000 - Global",
+      "transaction": "MD04",
+      "spool_name": "MD04",
+      "active": true,
+      "background_job": false,
+      "once_per_day": true,
+      "scope": "global",
+      "plant_params": {
+        "01-Anchieta": {
+          "werks": "5100",
+          "class": "MATERIAL",
+          "klart": "001",
+          "local_extract": "..\\..\\000 - Global",
+          "name_file": "MD04_full.XLSX"
+        }
+      }
+    }
+  }
+}
