@@ -7,18 +7,26 @@ from datetime import datetime
 import pythoncom
 
 from config.settings import settings
+from core.utils import get_target_export_dir
 
 def extract_sp02_job(session, plant_id: str, job_key: str, job_data: dict):
     try:
+        # 1. Obter configurações da Planta do JSON
         plant_config = settings.config["plants"].get(plant_id, {})
-        base_path = plant_config.get("base_path")
+        folder_name = plant_config.get("folder_name", plant_id)
+        inner_base_path = plant_config.get("base_path", "")
+        
         plant_params = job_data.get("plant_params", {}).get(plant_id, {})
         local_extract = plant_params.get("local_extract", "")
         name_file = plant_params.get("name_file", f"{job_key}.txt").format(date=datetime.now())
         spool_name = job_data.get("spool_name", job_key)
         
-        full_path = os.path.abspath(os.path.join(base_path, local_extract))
+        # 2. Construir o caminho absoluto perfeito
+        # Passamos o 'folder_name' em vez do 'plant_id' para criar a raiz correta!
+        base_plant_path = get_target_export_dir(folder_name)
+        full_path = os.path.normpath(os.path.join(base_plant_path, inner_base_path, local_extract))
         os.makedirs(full_path, exist_ok=True)
+        
         logging.info(f"Extraction for '{job_key}' (spool: '{spool_name}'): folder '{full_path}', file '{name_file}'")
         
         for i in range(3, 31):

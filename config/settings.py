@@ -9,6 +9,10 @@ class Settings:
     def __init__(self):
         self.config_path = Path(__file__).parent / "sapscripts_config.json"
         self.config = self._load_config()
+        
+        self.dynamic_user = None
+        self.dynamic_pwd = None
+        self.export_base_path = None
 
     def _load_config(self):
         if not self.config_path.exists():
@@ -21,6 +25,9 @@ class Settings:
                 raise ValueError(f"Erro ao analisar sapscripts_config.json: {e}")
 
     def get_credentials(self, plant_id: str) -> tuple:
+        if self.dynamic_user and self.dynamic_pwd:
+            return (self.dynamic_user, self.dynamic_pwd)
+
         try:
             code = self.config["plants"][plant_id]["code"]
         except KeyError:

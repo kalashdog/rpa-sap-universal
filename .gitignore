@@ -17,3 +17,14 @@ logs/
 .env.local
 secrets.json
 *.md~
+build/
+*.bat
+*.spec
+*.exe
+*.pkg
+*.pyz
+*.pyc
+*.toc
+dist/
+desktop.ini
+thumbs.db

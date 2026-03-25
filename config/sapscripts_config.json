@@ -1,9 +1,9 @@
 {
   "plants": {
-    "01-Anchieta": { "code": "ANC", "name": "Anchieta","base_path": "..\\001 - Anchieta\\000 - Dashboard Dados"},
-    "02-Taubate": { "code": "TBT", "name": "Taubate", "base_path": "..\\002 - Taubate\\000 - Dashboard Dados" },
-    "03-Curitiba": { "code": "CTB", "name": "Curitiba", "base_path": "..\\003 - Curitiba\\000 - Dashboard Dados" },
-    "04-SaoCarlos": { "code": "SCA", "name": "SaoCarlos", "base_path": "..\\004 - Sao Carlos\\000 - Dashboard Dados" }
+    "01-Anchieta": { "code": "ANC", "name": "Anchieta", "folder_name": "002 - Filiais database/001 - Anchieta", "base_path": "000 - Dashboard Dados"},
+    "02-Taubate": { "code": "TBT", "name": "Taubate", "folder_name": "002 - Filiais database/002 - Taubate", "base_path": "000 - Dashboard Dados" },
+    "03-Curitiba": { "code": "CTB", "name": "Curitiba", "folder_name": "002 - Filiais database/003 - Curitiba", "base_path": "000 - Dashboard Dados" },
+    "04-SaoCarlos": { "code": "SCA", "name": "SaoCarlos", "folder_name": "002 - Filiais database/004 - Sao Carlos", "base_path": "000 - Dashboard Dados" }
   },
   "jobs": {
     "ATEND_LINHA": {
@@ -163,9 +163,9 @@
           "werks": "5100",
           "lgort": "lb01",
           "bwart": "311",
-          "variant": "/viniemp",
+          "variant": "/viniemp2",
           "printer": "locl",
-          "local_extract": "003 - Baixa Empurrada\\b.e-historico",
+          "local_extract": "003 - Baixa Empurrada\\historico",
           "name_file": "mes{date:%m-%d-%Y}.txt"
         },
         "02-Taubate": {

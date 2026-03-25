@@ -9,6 +9,7 @@ import pythoncom
 import win32com.client
 
 from config.settings import settings
+from core.utils import get_target_export_dir
 
 
 #  HELPERS 
@@ -373,11 +374,19 @@ def request_mb52(session, plant_id: str, job_key: str):
 
 #  AL11_BESI3 (Foreground) 
 def request_al11_besi3(session, plant_id: str, job_key: str):
+    # 1. Obter configurações da Planta do JSON
+    plant_config = settings.config["plants"].get(plant_id, {})
+    folder_name = plant_config.get("folder_name", plant_id)
+    inner_base_path = plant_config.get("base_path", "")
+    
     params = settings.config["jobs"][job_key]["plant_params"][plant_id]
-    base_path = settings.config["plants"].get(plant_id, {}).get("base_path", "C:\\TEMP\\RPA_SAP")
     local_extract = params.get("local_extract", "")
     name_file = params.get("name_file", "besi3.txt").format(date=datetime.now())
-    full_path = os.path.abspath(os.path.join(base_path, local_extract))
+    
+    # 2. Construir o caminho absoluto perfeito
+    # Passamos o 'folder_name' em vez do 'plant_id' para criar a raiz correta!
+    base_plant_path = get_target_export_dir(folder_name)
+    full_path = os.path.normpath(os.path.join(base_plant_path, inner_base_path, local_extract))
     os.makedirs(full_path, exist_ok=True)
 
     folders = ["\\\\10.135.7.23\\files\\PRD\\interfaces", "pp", "inbound", "BESI3", "5100", "Backup"]
@@ -423,11 +432,19 @@ def request_al11_besi3(session, plant_id: str, job_key: str):
 
 #  PKMC_GERAL (Foreground) 
 def request_pkmc(session, plant_id: str, job_key: str):
+    # 1. Obter configurações da Planta do JSON
+    plant_config = settings.config["plants"].get(plant_id, {})
+    folder_name = plant_config.get("folder_name", plant_id)
+    inner_base_path = plant_config.get("base_path", "")
+    
     params = settings.config["jobs"][job_key]["plant_params"][plant_id]
-    base_path = settings.config["plants"].get(plant_id, {}).get("base_path", "C:\\TEMP\\RPA_SAP")
     local_extract = params.get("local_extract", "")
     name_file = params.get("name_file", "PKMC.XLSX").format(date=datetime.now())
-    full_path = os.path.abspath(os.path.join(base_path, local_extract))
+    
+    # 2. Construir o caminho absoluto perfeito
+    # Passamos o 'folder_name' em vez do 'plant_id' para criar a raiz correta!
+    base_plant_path = get_target_export_dir(folder_name)
+    full_path = os.path.normpath(os.path.join(base_plant_path, inner_base_path, local_extract))
     os.makedirs(full_path, exist_ok=True)
 
     session.findById("wnd[0]/usr/ssubCCY_AND_SELECTION:SAPLMPK_CCY_UI:0111/subSELECTION:SAPLMPK_CCY_UI:0113/ctxtRMPKR-WERKS").Text = params["werks"]
@@ -460,11 +477,19 @@ def request_pkmc(session, plant_id: str, job_key: str):
 
 #  MD04_GLOBAL (Foreground) 
 def request_md04_global(session, plant_id: str, job_key: str):
+    # 1. Obter configurações da Planta do JSON
+    plant_config = settings.config["plants"].get(plant_id, {})
+    folder_name = plant_config.get("folder_name", plant_id)
+    inner_base_path = plant_config.get("base_path", "")
+    
     params = settings.config["jobs"][job_key]["plant_params"][plant_id]
-    base_path = settings.config["plants"].get(plant_id, {}).get("base_path", "C:\\TEMP\\RPA_SAP")
     local_extract = params.get("local_extract", "")
     name_file = params.get("name_file", "MD04_full.XLSX").format(date=datetime.now())
-    full_path = os.path.abspath(os.path.join(base_path, local_extract))
+    
+    # 2. Construir o caminho absoluto perfeito
+    # Passamos o 'folder_name' em vez do 'plant_id' para criar a raiz correta!
+    base_plant_path = get_target_export_dir(folder_name)
+    full_path = os.path.normpath(os.path.join(base_plant_path, inner_base_path, local_extract))
     os.makedirs(full_path, exist_ok=True)
 
     session.findById("wnd[0]/usr/tabsTAB300/tabpF02").Select()

@@ -2,3 +2,7 @@ pywin32
 python-dotenv
 requests
 psutil
+customtkinter
+keyring
+pillow
+auto-py-to-exe
