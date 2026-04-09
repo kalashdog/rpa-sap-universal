@@ -19,7 +19,7 @@ def extract_sp02_job(session, plant_id: str, job_key: str, job_data: dict):
         plant_params = job_data.get("plant_params", {}).get(plant_id, {})
         local_extract = plant_params.get("local_extract", "")
         name_file = plant_params.get("name_file", f"{job_key}.txt").format(date=datetime.now())
-        spool_name = job_data.get("spool_name", job_key)
+        spool_name = plant_params.get("spool_name") or job_data.get("spool_name", job_key)
         
         # 2. Construir o caminho absoluto perfeito
         # Passamos o 'folder_name' em vez do 'plant_id' para criar a raiz correta!

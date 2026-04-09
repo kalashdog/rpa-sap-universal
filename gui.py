@@ -5,6 +5,7 @@ import threading
 import webbrowser
 import ctypes
 import time
+import subprocess
 from datetime import datetime, timedelta
 from tkinter import messagebox
 import tkinter as tk
@@ -53,8 +54,8 @@ FONT = "Segoe UI"
 FONT_MONO = "Consolas"
 
 # ── Dimensões ──────────────────────────────────────────────
-SIDEBAR_W = 380
-MAIN_W = 350
+SIDEBAR_W = 350
+MAIN_W = 380
 WIN_W = SIDEBAR_W + MAIN_W + 36  # 36 = paddings
 WIN_H = 640
 
@@ -844,9 +845,36 @@ class RpaGUI(ctk.CTk):
         self.progress_bar.set(0)
         self.progress_bar.pack(fill="x", padx=14, pady=(0, 12))
 
-        # Log
+        # ── FOOTER (Botões) - Empacotado ANTES do Log para garantir espaço ──
+        footer = ctk.CTkFrame(self.content, fg_color="transparent")
+        footer.pack(side="bottom", fill="x", pady=(10, 0))
+
+        self.lbl_hint = ctk.CTkLabel(
+            footer, text="Processando passos da planta…",
+            font=(FONT, 10), text_color=TEXT_MUTED
+        )
+        self.lbl_hint.pack(side="bottom", anchor="w", pady=(6, 0))
+
+        self.btn_back = ctk.CTkButton(
+            footer, text="Nova execução",
+            height=36, corner_radius=12,
+            fg_color=SECONDARY, hover_color=SECONDARY_HOVER,
+            text_color=TEXT, state="disabled",
+            font=(FONT, 12, "bold"), command=self._show_login
+        )
+        self.btn_back.pack(side="bottom", fill="x")
+
+        self.btn_stop = ctk.CTkButton(
+            footer, text="⏹   Parar",
+            height=38, corner_radius=12,
+            fg_color=DANGER, hover_color=DANGER_HOVER,
+            font=(FONT, 13, "bold"), command=self._stop
+        )
+        self.btn_stop.pack(side="bottom", fill="x", pady=(0, 6))
+
+        # ── LOG (Expande no espaço que sobrar no meio) ──
         lc = self._card(self.content, alt=True)
-        lc.pack(fill="both", expand=True, pady=(0, 10))
+        lc.pack(side="top", fill="both", expand=True, pady=(0, 0))
 
         ctk.CTkLabel(
             lc, text="LOG", font=(FONT, 10, "bold"), text_color=TEXT_MUTED
@@ -860,40 +888,15 @@ class RpaGUI(ctk.CTk):
         self.log_box.pack(fill="both", expand=True, padx=14, pady=(0, 14))
         self.log_box.configure(state="disabled")
 
-        # Botões
-        self.btn_stop = ctk.CTkButton(
-            self.content, text="⏹   Parar",
-            height=38, corner_radius=12,
-            fg_color=DANGER, hover_color=DANGER_HOVER,
-            font=(FONT, 13, "bold"), command=self._stop
-        )
-        self.btn_stop.pack(fill="x", pady=(0, 6))
-
-        self.btn_back = ctk.CTkButton(
-            self.content, text="Nova execução",
-            height=36, corner_radius=12,
-            fg_color=SECONDARY, hover_color=SECONDARY_HOVER,
-            text_color=TEXT, state="disabled",
-            font=(FONT, 12, "bold"), command=self._show_login
-        )
-        self.btn_back.pack(fill="x")
-
-        self.lbl_hint = ctk.CTkLabel(
-            self.content, text="Processando passos da planta…",
-            font=(FONT, 10), text_color=TEXT_MUTED
-        )
-        self.lbl_hint.pack(anchor="w", pady=(6, 0))
-
-        self._log(f"Execução iniciada — planta '{self.current_plant}'.")
-        self.start_time = time.time()
-        self.timer_running = True
-        self._tick()
-
     def _tick(self):
+        """Atualiza o timer a cada segundo. Reprograma enquanto timer_running e janela existir."""
         if self.timer_running and self._ok(self.lbl_timer):
             s = int(time.time() - self.start_time)
             self.lbl_timer.configure(text=f"⏱ {timedelta(seconds=s)}")
             self.after(1000, self._tick)
+        elif self.timer_running and not self._ok(self.lbl_timer):
+            # Widget destruido (navegação de tela): para o timer de forma segura
+            self.timer_running = False
 
     def _log(self, txt):
         if not self._ok(self.log_box):
@@ -934,14 +937,14 @@ class RpaGUI(ctk.CTk):
         low = (text or "").lower()
 
         if "erro" in low or "falha" in low or "exception" in low:
-            self._badge("error", "Erro")
-            self._finish("error")
+            # Erro transitório: atualiza badge mas NÃO trava o timer.
+            # O _finish("error") só é chamado pelo _worker() quando o processo termina de verdade.
+            self._badge("error", "Erro transient")
         elif "interromp" in low or "parada" in low:
             self._badge("warning", "Interrompido")
             self._finish("warning")
-        elif pct >= 100 or "conclu" in low or "sucesso" in low:
-            self._badge("success", "Concluído")
-            self._finish("success")
+        elif pct >= 100:
+            self._badge("success", "Ciclo Concluído")
         else:
             self._badge("info", "Em execução")
 
@@ -1031,6 +1034,33 @@ class RpaGUI(ctk.CTk):
 
         self._show_progress()
 
+        # Iniciar timer (deve ser feito APÓS _show_progress criar os widgets)
+        self._log(f"Execução iniciada — planta '{self.current_plant}'.")
+        
+        # --- WAKE UP ETL ---
+        try:
+            etl_exe_path = os.path.join(self.caminho_onedrive, "002 - Filiais database", "006 - ETL", "HubSese_ETL.exe")
+            if os.path.exists(etl_exe_path):
+                # Assegura que matamos orquestradores em background rodando com plantas antigas
+                os.system("taskkill /F /IM HubSese_ETL.exe /T 2>nul")
+                
+                import re
+                # Converter "01-Anchieta" para "anchieta"
+                clean_plant = re.sub(r'[\d\-]', '', self.current_plant).split()[0].strip().lower()
+                
+                # Acorda com a nova planta
+                subprocess.Popen([etl_exe_path, clean_plant], creationflags=0x08000000)
+                self._log(f"Processo ETL ativado em background com planta: {clean_plant}.")
+            else:
+                self._log("Aviso: Executável do ETL não foi encontrado neste caminho:")
+                self._log(etl_exe_path)
+        except Exception as e:
+            self._log(f"Aviso: Não foi possível acordar o ETL: {e}")
+        # -------------------
+        self.start_time = time.time()
+        self.timer_running = True
+        self._tick()
+
         self.worker_thread = threading.Thread(
             target=self._worker, args=(planta,), daemon=True
         )
@@ -1042,10 +1072,13 @@ class RpaGUI(ctk.CTk):
             if self.stop_event.is_set():
                 if not self.last_status or "interromp" not in self.last_status.lower():
                     self.update_status("Processo interrompido pelo usuário.", 0)
-            elif self.current_pct < 100:
-                self.update_status("Processo concluído com sucesso.", 100)
+            else:
+                self.update_status("Processo finalizado completamente.", 100)
+                self.after(0, lambda: self._finish("success"))
+                
         except Exception as e:
             self.update_status(f"Erro: {e}", self.current_pct)
+            self.after(0, lambda: self._finish("error"))
 
     def _stop(self):
         if not self._running():
@@ -1059,7 +1092,6 @@ class RpaGUI(ctk.CTk):
         self._log("Interrupção solicitada.")
 
 
-# ═══════════════════════════════════════════════════════════
 if __name__ == "__main__":
     app = RpaGUI()
     app.mainloop()

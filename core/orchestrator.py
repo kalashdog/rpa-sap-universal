@@ -17,7 +17,7 @@ from transactions.request import (
     request_atend_linha, request_lt23_fifo1, request_lt23_cofre1,
     request_mb51_empurrada, request_mb51_besi3,
     request_lx03, request_lx02,
-    request_lt22_imp2, request_lt22_imp3, request_lt22_zona,
+    request_lt22_imp2, request_lt22_imp3, request_lt22_zona, request_lt22_alertaop,
     request_vl06i, request_maisewm021r, request_mb52,
     request_al11_besi3, request_pkmc, request_md04_global
 )
@@ -59,7 +59,9 @@ JOB_ROUTER = {
     "LT22_IMP3": request_lt22_imp3,
     "LT22_ZONA": request_lt22_zona,
     "LT22_ZONA_GERAL": request_lt22_zona,
+    "lt22_ALERTAOP": request_lt22_alertaop,
     "VL06I_FORNEC": request_vl06i,
+    "VL06I_FORNEC2": request_vl06i,
     "MAISEWM021R_EMBALAGEM": request_maisewm021r,
     "MB52_AUTO": request_mb52,
     "AL11_BESI3": request_al11_besi3,

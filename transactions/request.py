@@ -111,7 +111,9 @@ def export_xxl(session, path, filename, shell_id=None):
 
 def _get_params(job_key, plant_id):
     cfg = settings.config["jobs"][job_key]
-    return cfg["plant_params"][plant_id], cfg["spool_name"]
+    plant_params = cfg["plant_params"][plant_id]
+    spool = plant_params.get("spool_name") or cfg["spool_name"]
+    return plant_params, spool
 
 
 
@@ -292,6 +294,26 @@ def request_lt22_imp3(session, plant_id: str, job_key: str):
     send_to_background(session, spool)
 
 
+#  LT22_ALERTAOP 
+def request_lt22_alertaop(session, plant_id: str, job_key: str):
+    params, spool = _get_params(job_key, plant_id)
+    data_ini = (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+    data_fim = datetime.now().strftime("%d.%m.%Y")
+
+    session.findById("wnd[0]/usr/ctxtT3_LGNUM").Text = params["lgnum"]
+    session.findById("wnd[0]/usr/ctxtT3_LGTYP-LOW").Text = params["lgtyp"]
+    
+    if params.get("radio") == "ALLTA":
+        session.findById("wnd[0]/usr/radT3_ALLTA").Select()
+    
+    session.findById("wnd[0]/usr/ctxtBDATU-LOW").Text = data_ini
+    session.findById("wnd[0]/usr/ctxtBDATU-HIGH").Text = data_fim
+    session.findById("wnd[0]/usr/ctxtLISTV").Text = params.get("variant", "")
+    session.findById("wnd[0]").sendVKey(0)
+
+    send_to_background(session, spool)
+
+
 #  LT22_ZONA 
 def request_lt22_zona(session, plant_id: str, job_key: str):
     params, spool = _get_params(job_key, plant_id)
@@ -310,15 +332,21 @@ def request_lt22_zona(session, plant_id: str, job_key: str):
     send_to_background(session, spool)
 
 
-#  VL06I_FORNEC 
+#  VL06I_FORNEC (e VL06I_FORNEC2 via lgnum) 
 def request_vl06i(session, plant_id: str, job_key: str):
     params, spool = _get_params(job_key, plant_id)
     today = datetime.now().strftime("%d.%m.%Y")
 
     session.findById("wnd[0]/usr/btnBUTTON7").press()
     
+    lgnum = params.get("lgnum")
     vstel = params.get("vstel", "")
-    if isinstance(vstel, list):
+
+    if lgnum:
+        # CTB parte 2: filtra por número de depósito (lgnum) em vez de ponto de expedição
+        session.findById("wnd[0]/usr/ctxtIF_VSTEL-LOW").Text = ""
+        session.findById("wnd[0]/usr/ctxtIT_LGNUM-LOW").Text = lgnum
+    elif isinstance(vstel, list):
         session.findById("wnd[0]/usr/btn%_IF_VSTEL_%_APP_%-VALU_PUSH").press()
         for idx, val in enumerate(vstel):
             session.findById(f"wnd[1]/usr/tabsTAB_STRIP/tabpSIVA/ssubSCREEN_HEADER:SAPLALDB:3010/tblSAPLALDBSINGLE/ctxtRSCSEL_255-SLOW_I[1,{idx}]").Text = val

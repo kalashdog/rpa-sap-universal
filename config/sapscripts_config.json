@@ -20,6 +20,13 @@
           "printer": "locl",
           "local_extract": "009 - Atendimento de Linha",
           "name_file": "raw_lt23.txt"
+        },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "variant": "/AT.LI.-LT23",
+          "printer": "locl",
+          "local_extract": "009 - Atendimento de linha",
+          "name_file": "ATENDIMENTO-LINHA-ENTRADA.txt"
         }
       }
     },
@@ -40,6 +47,12 @@
         "02-Taubate": {
           "lgnum": "TBT",
           "variant": "/kpiauto2",
+          "local_extract": "002 - Quebra de Fifo\\LT23",
+          "name_file": "LT23-{date:%d-%m-%Y}.txt"
+        },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "variant": "/LT23QFCTB",
           "local_extract": "002 - Quebra de Fifo\\LT23",
           "name_file": "LT23-{date:%d-%m-%Y}.txt"
         },
@@ -70,6 +83,13 @@
           "lgnum": "TBT",
           "lgtyp": "*",
           "variant": "/viniauto",
+          "local_extract": "002 - Quebra de Fifo\\LX03",
+          "name_file": "LX03-{date:%d-%m-%Y}.txt"
+        },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "lgtyp": "*",
+          "variant": "/LX03QFCTB",
           "local_extract": "002 - Quebra de Fifo\\LX03",
           "name_file": "LX03-{date:%d-%m-%Y}.txt"
         },
@@ -151,6 +171,24 @@
         }
       }
     },
+    "lt22_ALERTAOP": {
+      "dashboard": "022 - Alertas Operacionais",
+      "transaction": "LT22",
+      "spool_name": "ALERTAOP",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "lgtyp": "01C",
+          "variant": "/VINIAUTO",
+          "radio": "ALLTA",
+          "local_extract": "022 - Alertas Operacionais",
+          "name_file": "raw_lt22_01c.txt"
+        }
+      }
+    },
     "MB51_EMPURRADA": {
       "dashboard": "003 - Baixa Empurrada",
       "transaction": "MB51",
@@ -176,6 +214,15 @@
           "printer": "locl",
           "local_extract": "003 - Baixa Empurrada\\MB51HIST",
           "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        },
+        "03-Curitiba": {
+          "werks": "5700",
+          "lgort": "lb01",
+          "bwart": "311",
+          "variant": "/viniempctb2",
+          "printer": "locl",
+          "local_extract": "003 - Baixa Empurrada\\historico",
+          "name_file": "mes{date:%m-%d-%Y}.txt"
         },
         "04-SaoCarlos": {
           "werks": "5200",
@@ -208,11 +255,33 @@
           "local_extract": "001 - Fornecimentos pendentes",
           "name_file": "vl06i.txt"
         },
+        "03-Curitiba": {
+          "vstel": "p700",
+          "date_low": "01.01.2024",
+          "local_extract": "001 - Fornecimentos pendentes",
+          "name_file": "vl06icuritiba.txt"
+        },
         "04-SaoCarlos": {
           "vstel": ["p200", "a200"],
           "date_low": "01.01.2024",
           "local_extract": "001 - Fornecimentos pendentes",
           "name_file": "vl06i.txt"
+        }
+      }
+    },
+    "VL06I_FORNEC2": {
+      "dashboard": "001 - Fornecimentos Pendentes",
+      "transaction": "VL06I",
+      "spool_name": "FORNEC2",
+      "active": true,
+      "background_job": true,
+      "once_per_day": false,
+      "plant_params": {
+        "03-Curitiba": {
+          "lgnum": "ctb",
+          "date_low": "01.01.2024",
+          "local_extract": "001 - Fornecimentos pendentes",
+          "name_file": "vl06icuritibapt2.txt"
         }
       }
     },
@@ -237,6 +306,15 @@
           "radio": "OFFTA",
           "variant": "/ZONALT22PDT",
           "local_extract": "006 - Controle de ZZ1",
+          "name_file": "lt22zz1_pendentes.txt"
+        },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "lgtyp": "Z1B",
+          "radio": "OFFTA",
+          "variant": "/TST-DASH",
+          "spool_name": "ZONALT22PDT",
+          "local_extract": "006 - Controle de Zona",
           "name_file": "lt22zz1_pendentes.txt"
         },
         "04-SaoCarlos": {
@@ -297,6 +375,13 @@
           "local_extract": "006 - Controle de ZZ1",
           "name_file": "LX03ZZ1.txt"
         },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "lgtyp": "Z1B",
+          "variant": "/ctrlzonactb",
+          "local_extract": "006 - Controle de Zona",
+          "name_file": "LX03ZZ1.txt"
+        },
         "04-SaoCarlos": {
           "lgnum": "SCA",
           "lgtyp": "*",
@@ -323,6 +408,12 @@
         "02-Taubate": {
           "lgnum": "TBT",
           "variant": "/LX02BD",
+          "local_extract": "005 - Baixa Divergente",
+          "name_file": "LX02.txt"
+        },
+        "03-Curitiba": {
+          "lgnum": "CTB",
+          "variant": "/BDCTB",
           "local_extract": "005 - Baixa Divergente",
           "name_file": "LX02.txt"
         },
@@ -356,6 +447,14 @@
           "variant": "/TST",
           "local_extract": "005 - Baixa Divergente\\be_hist",
           "name_file": "MB51-{date:%d-%m-%Y}.txt"
+        },
+        "03-Curitiba": {
+          "werks": "5700",
+          "lgort": "lb01",
+          "bwart_list": ["y61", "311"],
+          "variant": "/BDCTB",
+          "local_extract": "005 - Baixa Divergente\\b.d-historico",
+          "name_file": "MB51-{date:%d%m%Y}.txt"
         },
         "04-SaoCarlos": {
           "werks": "5200",
@@ -443,6 +542,12 @@
         },
         "02-Taubate": {
           "werks": "5300",
+          "variant": "/VINIAUTO",
+          "local_extract": "000 - Compartilhado",
+          "name_file": "PKMC.XLSX"
+        },
+        "03-Curitiba": {
+          "werks": "5700",
           "variant": "/VINIAUTO",
           "local_extract": "000 - Compartilhado",
           "name_file": "PKMC.XLSX"
